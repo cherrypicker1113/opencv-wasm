@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {SampleAgent} from '@src/sample/agent/SampleAgent';
 import {Sample} from '@src/sample/model/Sample';
 
@@ -8,8 +8,7 @@ export type SamplesState = {
     hasNextPage: boolean;
 };
 
-type A = {samples: Sample[], page: number};
-export const fetchSamples = createAsyncThunk<A, {page: number, query?: string}>(
+export const fetchSamples = createAsyncThunk<{samples: Sample[], page: number}, {page: number, query?: string}>(
     'samples/fetch',
     async ({page, query}) => {
         const {data: {list: samples}} = await SampleAgent.fetchSamples(page, 20, query);
@@ -17,10 +16,16 @@ export const fetchSamples = createAsyncThunk<A, {page: number, query?: string}>(
     },
 );
 
-const samplesSlice = createSlice<SamplesState, {}>({
+const reducers = {
+    addSamples: (state: SamplesState, action: PayloadAction<Sample[]>) => {
+        state.samples = state.samples?.concat(action.payload);
+    }
+};
+
+const samplesSlice = createSlice<SamplesState, typeof reducers>({
     name: 'samples',
     initialState: {samples: [], page: 0, hasNextPage: true},
-    reducers: {},
+    reducers,
     extraReducers: (builder) => {
         builder.addCase(fetchSamples.pending, (state, action) => {
             //
@@ -35,4 +40,5 @@ const samplesSlice = createSlice<SamplesState, {}>({
     },
 });
 
+export const samplesActions = samplesSlice.actions;
 export default samplesSlice.reducer;
