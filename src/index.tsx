@@ -4,11 +4,11 @@ import {BrowserRouter} from 'react-router-dom';
 import {SampleView} from '@src/sample/view/SampleView';
 import {store} from '@src/store';
 
-ReactDOM.render(
-    <BrowserRouter>
-        <Provider store={store}>
-            <SampleView/>
-        </Provider>
-    </BrowserRouter>,
-    document.getElementById('root')
-);
+// ReactDOM.render(
+//     <BrowserRouter>
+//         <Provider store={store}>
+//             <SampleView/>
+//         </Provider>
+//     </BrowserRouter>,
+//     document.getElementById('root')
+// );
